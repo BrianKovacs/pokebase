@@ -90,6 +90,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       <a href="test2.php" class="w3-bar-item w3-button">All Pokémon</a>
       <a href="add.php" class="w3-bar-item w3-button">My Pokémon</a>
       <a href="trade.php" class="w3-bar-item w3-button">Trade</a>
+      <a href="complement.php" class="w3-bar-item w3-button">Complement</a>
+      <a href="hm.php" class="w3-bar-item w3-button">HM</a>
     </div>
   </div>
 
