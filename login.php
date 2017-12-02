@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
               /* Password is correct, so start a new session and
               save the username to the session */
               session_start();
-              $_SESSION['userID'] = $ID;
+              $_SESSION['user_ID'] = $ID;
               header("location: index.php");
             } else{
               // Display an error message if password is not valid

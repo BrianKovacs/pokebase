@@ -6,14 +6,14 @@ require_once 'config.php';
 session_start();
 
 // If session variable is not set it will redirect to login page
-if(!isset($_SESSION['userID']) || empty($_SESSION['userID'])){
+if(!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])){
   header("location: login.php");
   exit;
 }
 
 // Define variables and initialize with empty values
 $username = "";
-$user_ID = $_SESSION['userID'];
+$user_ID = trim($_SESSION["user_ID"]);
 
 // Prepare a select statement
 $sql = "SELECT Name FROM Trainer WHERE ID = ?";

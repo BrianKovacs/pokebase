@@ -2,20 +2,47 @@
 // Include config file
 require_once 'config.php';
 
-// Define variables and initialize with empty values
-$add = "";
-$user = "";
-$add_err = "";
-
 // Initialize the session
 session_start();
 
 // If session variable is not set it will redirect to login page
-if(!isset($_SESSION['userID']) || empty($_SESSION['userID'])){
+if(!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])){
   header("location: login.php");
   exit;
-} else {
-  $user = trim($_SESSION["username"]);
+}
+
+// Define variables and initialize with empty values
+$username = $add = $add_err = "";
+$user_ID = trim($_SESSION["user_ID"]);
+
+// Get username
+// Prepare a select statement
+$sql = "SELECT Name FROM Trainer WHERE ID = ?";
+
+if($stmt = mysqli_prepare($link, $sql)){
+  // Bind variables to the prepared statement as parameters
+  mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
+
+  // Set parameters
+  $param_user_ID = $user_ID;
+
+  // Attempt to execute the prepared statement
+  if(mysqli_stmt_execute($stmt)){
+    // Store result
+    mysqli_stmt_store_result($stmt);
+
+    // Check if username exists, if yes then verify password
+    if(mysqli_stmt_num_rows($stmt) == 1){
+      // Bind result variables
+      mysqli_stmt_bind_result($stmt, $username);
+      mysqli_stmt_fetch($stmt);
+    } else{
+      // Display an error message if username doesn't exist
+      $username_err = 'No account found with that username.';
+    }
+  } else{
+    echo "Oops! Something went wrong. Please try again later.";
+  }
 }
 
 // Processing form data when form is submitted
@@ -50,14 +77,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
           mysqli_stmt_close($stmt);
 
           // Add Pokemon to Team
-          $sql = "INSERT INTO Team (Pokemon_ID, Trainer_ID) SELECT Pokemon.ID, Trainer.ID FROM Pokemon, Trainer WHERE Pokemon.Name = ? AND Trainer.Name = ?";
+          $sql = "INSERT INTO Team (Pokemon_ID, Trainer_ID) SELECT Pokemon.ID, Trainer.ID FROM Pokemon, Trainer WHERE Pokemon.Name = ? AND Trainer.ID = ?";
 
           if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_add, $param_user);
+            mysqli_stmt_bind_param($stmt, "ss", $param_add, $param_user_ID);
             // Set parameters
             $param_add = $add;
-            $param_user = $user;
+            $param_user_ID = $user_ID;
 
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -103,20 +130,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
     </div>
 
-    <h1 style="text-align:center"><b><?php echo $_SESSION['username']; ?></b>'s Pokémon</h1>
+    <h1 style="text-align:center"><b><?php echo $username; ?></b>'s Pokémon</h1>
     <hr>
 
     <div class="w3-card-4 w3-white" style='margin:auto; width:700px;'>
       <?php
       // Prepare a select statement
-      $sql = "SELECT Pokemon.Name, Will_Trade, UPID FROM Team, Pokemon, Trainer WHERE Trainer.Name = ? AND Trainer.ID = Trainer_ID AND Pokemon.ID = Team.Pokemon_ID";
+      $sql = "SELECT Pokemon.Name, Will_Trade, UPID FROM Team, Pokemon WHERE Trainer_ID = ? AND Pokemon.ID = Team.Pokemon_ID";
 
       if($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "s", $param_username);
+        mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
 
         // Set parameters
-        $param_username = $_SESSION['username'];
+        $param_user_ID = trim($_SESSION["user_ID"]);
 
         // Attempt to execute the prepared statement
         if(mysqli_stmt_execute($stmt)){
