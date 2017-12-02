@@ -6,7 +6,7 @@ require_once 'config.php';
 session_start();
 
 // If session variable is not set it will redirect to login page
-if(!isset($_SESSION['userID']) || empty($_SESSION['userID'])){
+if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
   header("location: login.php");
   exit;
 }
@@ -17,21 +17,21 @@ $search_err = "";
 $do_search = false;
 
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Check if username is empty
-  if(empty(trim($_POST["search"]))){
+  if (empty(trim($_POST["search"]))){
     $search_err = 'Please enter a Pokémon.';
-  } else{
+  } else {
     $search = trim($_POST["search"]);
   }
 
   // Validate Pokemon name
-  if(empty($search_err)) {
+  if (empty($search_err)) {
     // Prepare a select statement
     $sql = "SELECT Name FROM Pokemon WHERE Name = ?";
 
-    if($stmt = mysqli_prepare($link, $sql)){
+    if($stmt = mysqli_prepare($link, $sql)) {
       // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "s", $param_search);
       // Set parameters
