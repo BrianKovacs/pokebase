@@ -1,12 +1,49 @@
 <?php
+// Include config file
+require_once 'config.php';
+
 // Initialize the session
 session_start();
 
 // If session variable is not set it will redirect to login page
-if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
+if(!isset($_SESSION['userID']) || empty($_SESSION['userID'])){
   header("location: login.php");
   exit;
 }
+
+// Define variables and initialize with empty values
+$username = "";
+$user_ID = $_SESSION['userID'];
+
+// Prepare a select statement
+$sql = "SELECT Name FROM Trainer WHERE ID = ?";
+
+if($stmt = mysqli_prepare($link, $sql)){
+  // Bind variables to the prepared statement as parameters
+  mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
+
+  // Set parameters
+  $param_user_ID = $user_ID;
+
+  // Attempt to execute the prepared statement
+  if(mysqli_stmt_execute($stmt)){
+    // Store result
+    mysqli_stmt_store_result($stmt);
+
+    // Check if username exists, if yes then verify password
+    if(mysqli_stmt_num_rows($stmt) == 1){
+      // Bind result variables
+      mysqli_stmt_bind_result($stmt, $username);
+      mysqli_stmt_fetch($stmt);
+    } else{
+      // Display an error message if username doesn't exist
+      $username_err = 'No account found with that username.';
+    }
+  } else{
+    echo "Oops! Something went wrong. Please try again later.";
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +65,7 @@ if(!isset($_SESSION['username']) || empty($_SESSION['username'])){
     </div>
   </div>
 
-  <h1 style="text-align:center">Hi, <b><?php echo $_SESSION['username']; ?></b>.<br> Welcome to Pokébase.</h1>
+  <h1 style="text-align:center">Hi, <b><?php echo $username; ?></b>.<br> Welcome to Pokébase.</h1>
   <hr>
   <p style="text-align:center;"><a href="logout.php" class="w3-button w3-red">Sign Out of Your Account</a></p>
 
