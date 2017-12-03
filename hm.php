@@ -219,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           }
           print "</table></div>";
         } else{
-          print "<br><div class='w3-container' style='margin:auto; width:450px;'>";
+          print "<br><div class='w3-container' style='margin:auto; width:420px;'>";
           print "<p>No results</p>";
           print "</div>";
         }
