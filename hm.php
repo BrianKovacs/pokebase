@@ -14,13 +14,14 @@
     display:none;
   }
   .toggle + label {
+    display: inline-block;
     cursor: pointer;
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
     text-align: center;
     border-radius: 34px;
-    padding: 2px 6px 3px;
+    padding: 3px 12px 4px;
   }
 
   input:checked + label {
@@ -76,7 +77,7 @@
     </div>
   </div>
 
-  <div class="w3-container" style="margin:auto; width:400px;">
+  <div class="w3-container" style="margin:auto; width:450px;">
 
     <div class="w3-card-4">
       <div class="w3-container w3-blue">
@@ -84,7 +85,6 @@
       </div>
 
       <form class="w3-container w3-light-grey" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-
         <table>
           <tr>
             <td>HM: </td>
