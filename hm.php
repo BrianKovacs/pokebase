@@ -10,6 +10,18 @@ if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
   header("location: login.php");
   exit;
 }
+
+$cut = $fly = $surf = $strength = $flash = $type = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  $cut = isset($_POST['cut']) ? "1" : "0";
+  $fly = isset($_POST['fly']) ? "1" : "0";
+  $surf = isset($_POST['surf']) ? "1" : "0";
+  $strength = isset($_POST['strength']) ? "1" : "0";
+  $flash = isset($_POST['flash']) ? "1" : "0";
+  $type = trim($_POST['type']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -100,15 +112,15 @@ if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
             <td>HM: </td>
             <td colspan="2">
               <p>
-                <input type="checkbox" id="cut" name="cut" class="toggle">
+                <input type="checkbox" id="cut" name="cut" class="toggle" <?php if($cut) echo "checked" ?>>
                 <label for="cut">Cut</label>
-                <input type="checkbox" id="fly" name="fly" class="toggle">
+                <input type="checkbox" id="fly" name="fly" class="toggle" <?php if($fly) echo "checked" ?>>
                 <label for="fly">Fly</label>
-                <input type="checkbox" id="surf" name="surf" class="toggle">
+                <input type="checkbox" id="surf" name="surf" class="toggle" <?php if($surf) echo "checked" ?>>
                 <label for="surf">Surf</label>
-                <input type="checkbox" id="strengeth" name="strengeth" class="toggle">
-                <label for="strengeth">Strength</label>
-                <input type="checkbox" id="flash" name="flash" class="toggle">
+                <input type="checkbox" id="strength" name="strength" class="toggle" <?php if($strength) echo "checked" ?>>
+                <label for="strength">Strength</label>
+                <input type="checkbox" id="flash" name="flash" class="toggle" <?php if($flash) echo "checked" ?>>
                 <label for="flash">Flash</label>
               </p>
             </td>
@@ -118,7 +130,7 @@ if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
             <td>
               <div class="select-style">
                 <i class="fa fa-caret-down" style='font-size:14px'></i>
-                <select name="type">
+                <select name="type" value="<?php echo $type; ?>">
                   <option value="%%">Any</option>
                   <option value="%Bug%">Bug</option>
                   <option value="%Dragon%">Dragon</option>
@@ -149,17 +161,17 @@ if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
   // Processing form data when form is submitted
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $cut = isset($_POST['cut']) ? "1" : "0";
-    $fly = isset($_POST['fly']) ? "1" : "0";
-    $surf = isset($_POST['surf']) ? "1" : "0";
-    $strengeth = isset($_POST['strengeth']) ? "1" : "0";
-    $flash = isset($_POST['flash']) ? "1" : "0";
-    $type = trim($_POST['type']);
+    // $cut = isset($_POST['cut']) ? "1" : "0";
+    // $fly = isset($_POST['fly']) ? "1" : "0";
+    // $surf = isset($_POST['surf']) ? "1" : "0";
+    // $strength = isset($_POST['strength']) ? "1" : "0";
+    // $flash = isset($_POST['flash']) ? "1" : "0";
+    // $type = trim($_POST['type']);
 
     print "<p>" . $cut . "</p>";
     print "<p>" . $fly . "</p>";
     print "<p>" . $surf . "</p>";
-    print "<p>" . $strengeth . "</p>";
+    print "<p>" . $strength . "</p>";
     print "<p>" . $flash . "</p>";
     print "<p>" . $type . "</p>";
 
