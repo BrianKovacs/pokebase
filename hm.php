@@ -131,22 +131,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <div class="select-style">
                 <i class="fa fa-caret-down" style='font-size:14px'></i>
                 <select name="type" value="<?php echo $type; ?>">
-                  <option value="%%">Any</option>
-                  <option value="%Bug%">Bug</option>
-                  <option value="%Dragon%">Dragon</option>
-                  <option value="%Electric%">Electric</option>
-                  <option value="%Fighting%">Fighting</option>
-                  <option value="%Fire%">Fire</option>
-                  <option value="%Flying%">Flying</option>
-                  <option value="%Ghost%">Ghost</option>
-                  <option value="%Grass%">Grass</option>
-                  <option value="%Ground%">Ground</option>
-                  <option value="%Ice%">Ice</option>
-                  <option value="%Normal%">Normal</option>
-                  <option value="%Poison%">Poison</option>
-                  <option value="%Psychic%">Psychic</option>
-                  <option value="%Rock%">Rock</option>
-                  <option value="%Water%">Water</option>
+                  <option value="%%" <?php if($type == "%%") echo "selected" ?>>Any</option>
+                  <option value="%Bug%" <?php if($type == "%Bug%") echo "selected" ?>>Bug</option>
+                  <option value="%Dragon%" <?php if($type == "%Dragon%") echo "selected" ?>>Dragon</option>
+                  <option value="%Electric%" <?php if($type == "%Electric%") echo "selected" ?>>Electric</option>
+                  <option value="%Fighting%" <?php if($type == "%Fighting%") echo "selected" ?>>Fighting</option>
+                  <option value="%Fire%" <?php if($type == "%Fire%") echo "selected" ?>>Fire</option>
+                  <option value="%Flying%" <?php if($type == "%Flying%") echo "selected" ?>>Flying</option>
+                  <option value="%Ghost%" <?php if($type == "%Ghost%") echo "selected" ?>>Ghost</option>
+                  <option value="%Grass%" <?php if($type == "%Grass%") echo "selected" ?>>Grass</option>
+                  <option value="%Ground%" <?php if($type == "%Ground%") echo "selected" ?>>Ground</option>
+                  <option value="%Ice%" <?php if($type == "%Ice%") echo "selected" ?>>Ice</option>
+                  <option value="%Normal%" <?php if($type == "%Normal%") echo "selected" ?>>Normal</option>
+                  <option value="%Poison%" <?php if($type == "%Poison%") echo "selected" ?>>Poison</option>
+                  <option value="%Psychic%" <?php if($type == "%Psychic%") echo "selected" ?>>Psychic</option>
+                  <option value="%Rock%" <?php if($type == "%Rock%") echo "selected" ?>>Rock</option>
+                  <option value="%Water%" <?php if($type == "%Water%") echo "selected" ?>>Water</option>
                 </select>
               </div>
             </td>
@@ -160,13 +160,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <?php
   // Processing form data when form is submitted
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // $cut = isset($_POST['cut']) ? "1" : "0";
-    // $fly = isset($_POST['fly']) ? "1" : "0";
-    // $surf = isset($_POST['surf']) ? "1" : "0";
-    // $strength = isset($_POST['strength']) ? "1" : "0";
-    // $flash = isset($_POST['flash']) ? "1" : "0";
-    // $type = trim($_POST['type']);
 
     print "<p>" . $cut . "</p>";
     print "<p>" . $fly . "</p>";
