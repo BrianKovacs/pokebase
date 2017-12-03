@@ -1,5 +1,15 @@
 <?php
+// Include config file
+require_once 'config.php';
 
+// Initialize the session
+session_start();
+
+// If session variable is not set it will redirect to login page
+if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
+  header("location: login.php");
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,16 +100,16 @@
             <td>HM: </td>
             <td colspan="2">
               <p>
-                <input type="checkbox" id="Cut" class="toggle">
-                <label for="Cut">Cut</label>
-                <input type="checkbox" id="Fly" class="toggle">
-                <label for="Fly">Fly</label>
-                <input type="checkbox" id="Surf" class="toggle">
-                <label for="Surf">Surf</label>
-                <input type="checkbox" id="Strengeth" class="toggle">
-                <label for="Strengeth">Strength</label>
-                <input type="checkbox" id="Flash" class="toggle">
-                <label for="Flash">Flash</label>
+                <input type="checkbox" id="cut" name="cut" class="toggle">
+                <label for="cut">Cut</label>
+                <input type="checkbox" id="fly" name="fly" class="toggle">
+                <label for="fly">Fly</label>
+                <input type="checkbox" id="surf" name="surf" class="toggle">
+                <label for="surf">Surf</label>
+                <input type="checkbox" id="strengeth" name="strengeth" class="toggle">
+                <label for="strengeth">Strength</label>
+                <input type="checkbox" id="flash" name="flash" class="toggle">
+                <label for="flash">Flash</label>
               </p>
             </td>
           </tr>
@@ -108,7 +118,7 @@
             <td>
               <div class="select-style">
                 <i class="fa fa-caret-down" style='font-size:14px'></i>
-                <select class="" name="">
+                <select name="type">
                   <option value="%%">Any</option>
                   <option value="%Bug%">Bug</option>
                   <option value="%Dragon%">Dragon</option>
@@ -134,6 +144,64 @@
       </form>
     </div>
   </div>
+
+  <?php
+  // Processing form data when form is submitted
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $cut = isset($_POST['cut']) ? "1" : "0";
+    $fly = isset($_POST['fly']) ? "1" : "0";
+    $surf = isset($_POST['surf']) ? "1" : "0";
+    $strengeth = isset($_POST['strengeth']) ? "1" : "0";
+    $flash = isset($_POST['flash']) ? "1" : "0";
+    $type = trim($_POST['type']);
+
+    print "<p>" . $cut . "</p>";
+    print "<p>" . $fly . "</p>";
+    print "<p>" . $surf . "</p>";
+    print "<p>" . $strengeth . "</p>";
+    print "<p>" . $flash . "</p>";
+    print "<p>" . $type . "</p>";
+
+    // // Check if username is empty
+    // if (empty(trim($_POST["search"]))){
+    //   $search_err = 'Please enter a Pokémon.';
+    // } else {
+    //   $search = trim($_POST["search"]);
+    // }
+    //
+    // // Validate Pokemon name
+    // if (empty($search_err)) {
+    //   // Prepare a select statement
+    //   $sql = "SELECT Name FROM Pokemon WHERE Name = ?";
+    //
+    //   if($stmt = mysqli_prepare($link, $sql)) {
+    //     // Bind variables to the prepared statement as parameters
+    //     mysqli_stmt_bind_param($stmt, "s", $param_search);
+    //     // Set parameters
+    //     $param_search = $search;
+    //
+    //     // Attempt to execute the prepared statement
+    //     if(mysqli_stmt_execute($stmt)){
+    //       // Store result
+    //       mysqli_stmt_store_result($stmt);
+    //
+    //       // Check if username exists, if yes then verify password
+    //       if(mysqli_stmt_num_rows($stmt) == 1){
+    //         $do_search = true;
+    //       } else{
+    //         // Display an error message if username doesn't exist
+    //         $search_err = 'Please enter a valid Pokémon name.';
+    //       }
+    //     } else{
+    //       echo "Oops! Something went wrong. Please try again later.";
+    //     }
+    //   }
+    //   // Close statement
+    //   mysqli_stmt_close($stmt);
+    // }
+  }
+  ?>
 
 </body>
 </html>
