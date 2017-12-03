@@ -161,50 +161,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Processing form data when form is submitted
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    print "<p>" . $cut . "</p>";
-    print "<p>" . $fly . "</p>";
-    print "<p>" . $surf . "</p>";
-    print "<p>" . $strength . "</p>";
-    print "<p>" . $flash . "</p>";
-    print "<p>" . $type . "</p>";
+    // print "<p>" . $cut . "</p>";
+    // print "<p>" . $fly . "</p>";
+    // print "<p>" . $surf . "</p>";
+    // print "<p>" . $strength . "</p>";
+    // print "<p>" . $flash . "</p>";
+    // print "<p>" . $type . "</p>";
 
-    // // Check if username is empty
-    // if (empty(trim($_POST["search"]))){
-    //   $search_err = 'Please enter a Pokémon.';
-    // } else {
-    //   $search = trim($_POST["search"]);
-    // }
-    //
-    // // Validate Pokemon name
-    // if (empty($search_err)) {
-    //   // Prepare a select statement
-    //   $sql = "SELECT Name FROM Pokemon WHERE Name = ?";
-    //
-    //   if($stmt = mysqli_prepare($link, $sql)) {
-    //     // Bind variables to the prepared statement as parameters
-    //     mysqli_stmt_bind_param($stmt, "s", $param_search);
-    //     // Set parameters
-    //     $param_search = $search;
-    //
-    //     // Attempt to execute the prepared statement
-    //     if(mysqli_stmt_execute($stmt)){
-    //       // Store result
-    //       mysqli_stmt_store_result($stmt);
-    //
-    //       // Check if username exists, if yes then verify password
-    //       if(mysqli_stmt_num_rows($stmt) == 1){
-    //         $do_search = true;
-    //       } else{
-    //         // Display an error message if username doesn't exist
-    //         $search_err = 'Please enter a valid Pokémon name.';
-    //       }
-    //     } else{
-    //       echo "Oops! Something went wrong. Please try again later.";
-    //     }
-    //   }
-    //   // Close statement
-    //   mysqli_stmt_close($stmt);
-    // }
+    // Prepare a select statement
+    $sql =
+    "SELECT DISTINCT
+    ID, Name
+    FROM
+    Has_Type,
+    (
+      SELECT
+      ID, Name
+      FROM
+      Pokemon
+      WHERE
+      Cut >= ? AND Fly >= ? AND Surf >= ? AND Strength >= ? AND Flash >= ?
+    ) R1
+    WHERE
+    Has_Type.Pokemon_ID = R1.ID AND Type LIKE ?";
+
+
+    if($stmt = mysqli_prepare($link, $sql)) {
+      // Bind variables to the prepared statement as parameters
+      mysqli_stmt_bind_param($stmt, "iiiiis", $param_cut, $param_fly, $param_surf, $param_strength, $param_flash, $param_type);
+      // Set parameters
+      $param_cut = $cut;
+      $param_fly = $fly;
+      $param_surf = $surf;
+      $param_strength = $strength;
+      $param_flash = $flash;
+      $param_type = $type;
+
+      // Attempt to execute the prepared statement
+      if(mysqli_stmt_execute($stmt)){
+        // Store result
+        mysqli_stmt_store_result($stmt);
+
+        // Check if username exists, if yes then verify password
+        if(mysqli_stmt_num_rows($stmt) >= 1){
+          // print
+          mysqli_stmt_bind_result($stmt, $col1, $col2);
+          print "<br><div class='w3-card-4 w3-white' style='margin:auto; width:420px;'>";
+          print "<table class='w3-table w3-bordered'>";
+          print "<tr align = 'center' class='w3-blue'>";
+          print "<th colspan='2' style='text-align:center;'>Pokémon</th>";
+          print "</tr>";
+          while (mysqli_stmt_fetch($stmt)) {
+            print "<tr style='vertical-align:middle; height:75px;'>";
+            print "<td><img height='75px' src='images/pokemon/" . $col2 . ".jpg'></td> ";
+            print "<td style='vertical-align:middle; text-align:left;'>" . $col2 . "</td> ";
+            print "</tr>";
+          }
+          print "</table></div>";
+        } else{
+          print "<br><div class='w3-container' style='margin:auto; width:450px;'>";
+          print "<p>No results</p>";
+          print "</div>";
+        }
+      }
+      // Close statement
+      mysqli_stmt_close($stmt);
+    }
   }
   ?>
 
