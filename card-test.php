@@ -148,7 +148,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
       <?php
       // Prepare a select statement
-      $sql = "SELECT Pokemon.Name, Will_Trade, UPID FROM Team, Pokemon WHERE Trainer_ID = ? AND Pokemon.ID = Team.Pokemon_ID";
+      $sql = "SELECT Pokemon.Name, Will_Trade, UPID, HP, Attack, Defense, Sp_Attack, Sp_Defense, Speed FROM Team, Pokemon WHERE Trainer_ID = ? AND Pokemon.ID = Team.Pokemon_ID";
 
       if($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
@@ -161,7 +161,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(mysqli_stmt_execute($stmt)){
           // Store result
           mysqli_stmt_store_result($stmt);
-          mysqli_stmt_bind_result($stmt, $col1, $col2, $col3);
+          mysqli_stmt_bind_result($stmt, $col1, $col2, $col3, $hp, $attack, $defense, $sp_attack, $sp_defense, $speed);
           while (mysqli_stmt_fetch($stmt)) {
             print "
             <div class='w3-card-4 w3-white' style='float:left; width:250px; margin:25px;'>
@@ -174,17 +174,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
               </table>
               <table class='w3-table w3-bordered w3-white'>
                 <tr>
-                  <td style='text-align:center;'><div style='width:100%; height:175px;'><img style='height: 100%; width: 100%; object-fit: contain' src='images/pokemon/" . $col1 . "'></div></td>
+                  <td style='text-align:center;'><div style='width:100%; height:175px;'><img style='height: 100%; width: 100%; object-fit: contain' src='images/pokemon/" . $col1 . ".jpg'></div></td>
                 </tr>
                 <tr>
                   <td>Stats:
                     <span style='font-size:13px;'>
-                      <span class='w3-round-xxlarge w3-red' style='padding:4px 8px; display:inline-block; margin: 2px 0'>HP <b>45</b></span>
-                      <span class='w3-round-xxlarge w3-orange' style='padding:4px 8px; display:inline-block; margin: 2px 0; color:white !important;'>Attack <b>45</b></span>
-                      <span class='w3-round-xxlarge w3-yellow' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Defense <b>45</b></span>
-                      <span class='w3-round-xxlarge w3-blue' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Attack <b>45</b></span>
-                      <span class='w3-round-xxlarge w3-green' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Defense <b>45</b></span>
-                      <span class='w3-round-xxlarge w3-pink' style='padding:4px 8px; display:inline-block; margin: 2px 0'><b>Speed</b> 45</span>
+                      <span class='w3-round-xxlarge w3-red' style='padding:4px 8px; display:inline-block; margin: 2px 0'>HP <b>" . $hp . "</b></span>
+                      <span class='w3-round-xxlarge w3-orange' style='padding:4px 8px; display:inline-block; margin: 2px 0; color:white !important;'>Attack <b>" . $attack . "</b></span>
+                      <span class='w3-round-xxlarge w3-yellow' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Defense <b>" . $defense . "</b></span>
+                      <span class='w3-round-xxlarge w3-blue' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Attack <b>" . $sp_attack . "</b></span>
+                      <span class='w3-round-xxlarge w3-green' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Defense <b>" . $sp_defense . "</b></span>
+                      <span class='w3-round-xxlarge w3-pink' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Speed <b>" . $speed . "</b></span>
                     </span>
                   </td>
                 </tr>

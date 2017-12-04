@@ -135,10 +135,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <h1 style="text-align:center"><b><?php echo $username; ?></b>'s Pokémon</h1>
     <hr>
 
-    <div class="w3-card-4 w3-white" style='margin:auto; width:700px;'>
+    <div class="w3-card-4 w3-white" style='margin:auto; width:850px;'>
+      <form action="add.php" method="post">
+        <div class="w3-container" style="padding:16px;">
+          <label>Add:</label>
+          <input type="text" name="add"class="form-control" value="<?php echo $add; ?>">
+          <span class="help-block"><?php echo $add_err; ?></span>
+        </div>
+      </form>
+    </div>
+    <div style="margin:auto; width:900px;">
+
       <?php
       // Prepare a select statement
-      $sql = "SELECT Pokemon.Name, Will_Trade, UPID FROM Team, Pokemon WHERE Trainer_ID = ? AND Pokemon.ID = Team.Pokemon_ID";
+      $sql = "SELECT Pokemon.Name, Will_Trade, UPID, HP, Attack, Defense, Sp_Attack, Sp_Defense, Speed FROM Team, Pokemon WHERE Trainer_ID = ? AND Pokemon.ID = Team.Pokemon_ID";
 
       if($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
@@ -151,28 +161,41 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(mysqli_stmt_execute($stmt)){
           // Store result
           mysqli_stmt_store_result($stmt);
-          mysqli_stmt_bind_result($stmt, $col1, $col2, $col3);
-          print "<table class='w3-table w3-bordered'>";
-          print "<tr align = 'center' class='w3-blue'>";
-          print "<th colspan='2' style='text-align:center;'>Pokémon</th>";
-          print "<th>Will trade?</th>";
-          print "<th>Remove</th>";
-          print "</tr>";
+          mysqli_stmt_bind_result($stmt, $col1, $col2, $col3, $hp, $attack, $defense, $sp_attack, $sp_defense, $speed);
           while (mysqli_stmt_fetch($stmt)) {
-            print "<tr style='vertical-align:middle; height:75px;'>";
-            print "<td><img height='75px' src='images/pokemon/" . $col1 . ".jpg'></td> ";
-            print "<td style='vertical-align:middle; text-align:left;'>" . $col1 . "</td> ";
-            // print "<td style='vertical-align:middle;'>";
-            // echo ($col2 == '1') ? 'Yes' : 'No';
-            // print "</td> ";
-            print "<td style='vertical-align:middle;'> <form action='toggle-trade.php' method='post'> <input type='hidden' value='" . $col2 . "' name='trade' /> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-xlarge w3-circle w3-white' value='Submit'><i class='";
-            echo ($col2 == '1') ? 'fa fa-check-square-o' : 'fa fa-square-o';
-            print "' style='font-size:24px'></i></button></form> </td> ";
-            print "<td style='vertical-align:middle;'> <form action='remove.php' method='post'> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-xlarge w3-circle w3-white' value='Submit'><i class='fa fa-remove' style='font-size:24px'></i></button></form> </td> ";
-            print "</tr>";
+            print "
+            <div class='w3-card-4 w3-white' style='float:left; width:250px; margin:25px;'>
+              <table class='w3-table w3-bordered w3-white'>
+                <tr align = 'center' class='w3-blue'>
+                  <th style='width:50px;'></th>
+                  <th style='text-align:center;vertical-align:middle;'>" . $col1 . "</th>
+                  <th style='width:50px;'><form action='remove.php' method='post'> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-circle w3-blue' value='Submit' style='width:30px; height:30px; padding:0;'><i class='fa fa-remove' style='font-size:20px;'></i></button></form></th>
+                </tr>
+              </table>
+              <table class='w3-table w3-bordered w3-white'>
+                <tr>
+                  <td style='text-align:center;'><div style='width:100%; height:175px;'><img style='height: 100%; width: 100%; object-fit: contain' src='images/pokemon/" . $col1 . ".jpg'></div></td>
+                </tr>
+                <tr>
+                  <td>Stats:
+                    <span style='font-size:13px;'>
+                      <span class='w3-round-xxlarge w3-red' style='padding:4px 8px; display:inline-block; margin: 2px 0'>HP <b>" . $hp . "</b></span>
+                      <span class='w3-round-xxlarge w3-orange' style='padding:4px 8px; display:inline-block; margin: 2px 0; color:white !important;'>Attack <b>" . $attack . "</b></span>
+                      <span class='w3-round-xxlarge w3-yellow' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Defense <b>" . $defense . "</b></span>
+                      <span class='w3-round-xxlarge w3-blue' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Attack <b>" . $sp_attack . "</b></span>
+                      <span class='w3-round-xxlarge w3-green' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Defense <b>" . $sp_defense . "</b></span>
+                      <span class='w3-round-xxlarge w3-pink' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Speed <b>" . $speed . "</b></span>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Willing to trade:<form action='toggle-trade.php' method='post'> <input type='hidden' value='" . $col2 . "' name='trade' /> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-xlarge w3-circle w3-white' value='Submit'><i class='";
+                  echo ($col2 == '1') ? 'fa fa-check-square-o' : 'fa fa-square-o';
+                  print "' style='font-size:24px'></i></button></form> </td>
+                </tr>
+              </table>
+            </div>";
           }
-          print "</table>";
-
         } else{
           echo "Oops! Something went wrong. Please try again later.";
         }
@@ -180,13 +203,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       }
       ?>
 
-      <form action="add.php" method="post">
-        <div class="w3-container" style="padding:16px;">
-          <label>Add:</label>
-          <input type="text" name="add"class="form-control" value="<?php echo $add; ?>">
-          <span class="help-block"><?php echo $add_err; ?></span>
-        </div>
-      </form>
     </div>
 
   </body>
