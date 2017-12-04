@@ -135,15 +135,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <h1 style="text-align:center"><b><?php echo $username; ?></b>'s Pokémon</h1>
     <hr>
 
-    <div class="w3-card-4 w3-white" style='margin:auto; width:850px;'>
-      <form action="add.php" method="post">
-        <div class="w3-container" style="padding:16px;">
-          <label>Add:</label>
-          <input type="text" name="add"class="form-control" value="<?php echo $add; ?>">
+    <div class="w3-card-4" style='margin:auto; width:850px;'>
+      <div class="w3-container w3-blue">
+        <h2>Add Pokémon</h2>
+      </div>
+      <form class="w3-container w3-light-grey" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <p>
+          <label>Name:</label>
+          <input class="w3-input" type="text" name="add" value="<?php echo $add; ?>">
           <span class="help-block"><?php echo $add_err; ?></span>
-        </div>
+        </p>
       </form>
     </div>
+
     <div style="margin:auto; width:900px;">
 
       <?php

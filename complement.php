@@ -25,6 +25,103 @@ $user_ID = trim($_SESSION["user_ID"]);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style media="screen" type="text/css">
 
+  @-webkit-keyframes fadeIn { from { width:0%; } to { width:100%; } }
+  @-moz-keyframes fadeIn { from { width:0%; } to { width:100%; } }
+  @keyframes fadeIn { from { width:0%; } to { width:100%; } }
+
+  .fade-in {
+    width:0%;  /* make things invisible upon start */
+    -webkit-animation:fadeIn ease 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation:fadeIn ease 1;
+    animation:fadeIn ease 1;
+
+    -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;
+  }
+
+  .fade-in.delay1 {
+    -webkit-animation-delay: 0.1s;
+    -moz-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+  }
+  .fade-in.delay2 {
+    -webkit-animation-delay: 0.2s;
+    -moz-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+  }
+  .fade-in.delay3 {
+    -webkit-animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+  }
+  .fade-in.delay4 {
+    -webkit-animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+  }
+  .fade-in.delay5 {
+    -webkit-animation-delay: 0.5s;
+    -moz-animation-delay: 0.5s;
+    animation-delay: 0.5s;
+  }
+  .fade-in.delay6 {
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+  }
+  .fade-in.delay7 {
+    -webkit-animation-delay: 0.7s;
+    -moz-animation-delay: 0.7s;
+    animation-delay: 0.7s;
+  }
+  .fade-in.delay8 {
+    -webkit-animation-delay: 0.8s;
+    -moz-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+  }
+  .fade-in.delay9 {
+    -webkit-animation-delay: 0.9s;
+    -moz-animation-delay: 0.9s;
+    animation-delay: 0.9s;
+  }
+  .fade-in.delay10 {
+    -webkit-animation-delay: 1s;
+    -moz-animation-delay: 1s;
+    animation-delay: 1s;
+  }
+  .fade-in.delay11 {
+    -webkit-animation-delay: 1.1s;
+    -moz-animation-delay: 1.1s;
+    animation-delay: 1.1s;
+  }
+  .fade-in.delay12 {
+    -webkit-animation-delay: 1.2s;
+    -moz-animation-delay: 1.2s;
+    animation-delay: 1.2s;
+  }
+  .fade-in.delay13 {
+    -webkit-animation-delay: 1.3s;
+    -moz-animation-delay: 1.3s;
+    animation-delay: 1.3s;
+  }
+  .fade-in.delay14 {
+    -webkit-animation-delay: 1.4s;
+    -moz-animation-delay: 1.4s;
+    animation-delay: 1.4s;
+  }
+  .fade-in.delay15 {
+    -webkit-animation-delay: 1.5s;
+    -moz-animation-delay: 1.5s;
+    animation-delay: 1.5s;
+  }
+
+
+
   /* Three column layout */
   #bars * {
     box-sizing: border-box;
@@ -64,7 +161,7 @@ $user_ID = trim($_SESSION["user_ID"]);
 
   /* Individual bars */
   .bar-5 {width: 60%; height: 18px; background-color: #4CAF50;}
-  .bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+  .bar-4 {width: 30%; height: 18px; }
   .bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
   .bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
   .bar-1 {width: 15%; height: 18px; background-color: #f44336;}
@@ -94,14 +191,16 @@ $user_ID = trim($_SESSION["user_ID"]);
     </div>
   </div>
 
-  <h1 style="text-align:center">Team Effectiveness</h1>
+  <h1 style="text-align:center">Complement</h1>
   <hr>
-
 
 
   <br>
   <div class="w3-card-4 w3-white" style='margin:auto; width:700px;' id="bars">
-    <div class="row">
+    <div class="w3-container w3-blue">
+      <h2>Team Effectiveness</h2>
+    </div>
+    <div class="row" style="padding:20px;">
       <?php
 
       // Prepare a select statement
@@ -139,6 +238,7 @@ $user_ID = trim($_SESSION["user_ID"]);
           if(mysqli_stmt_num_rows($stmt) >= 1){
             // Create table
             mysqli_stmt_bind_result($stmt, $col1, $col2);
+            $count = 1;
 
             while (mysqli_stmt_fetch($stmt)) {
               print
@@ -147,7 +247,13 @@ $user_ID = trim($_SESSION["user_ID"]);
               </div>
               <div class='middle'>
                 <div class='bar-container'>
-                  <div class='bar-4' style='width: " . ($col2 / 0.24) . "%'></div>
+                  <div class='bar-4' style='background:none; width: " . ($col2 / 0.24) . "%'><div class='bar-4 fade-in delay" . $count++ . " w3-";
+                    if ($col2 >= 12) print "blue";
+                    else if ($col2 >= 9) print "green";
+                    else if ($col2 >= 6) print "yellow";
+                    else if ($col2 >= 3) print "orange";
+                    else print "red";
+                  print "' style='width: 0%;'></div></div>
                 </div>
               </div>
               <div class='side right'>
