@@ -94,133 +94,80 @@ $user_ID = trim($_SESSION["user_ID"]);
     </div>
   </div>
 
-  <h1 style="text-align:center">Trade Pokémon</h1>
+  <h1 style="text-align:center">Team Effectiveness</h1>
   <hr>
 
-  <div class="w3-card-4 w3-white" style='margin:auto; width:700px;'>
-    <?php
 
-    // Prepare a select statement
-    $sql =
-    "SELECT
-    	Defender, SUM(Multiplier) AS Result
-    FROM
-    	Effectiveness,
-        (
-    		SELECT
-    			Has_Type.Type
-    		FROM
-    			Team, Has_Type
-    		WHERE
-    			Trainer_ID = ? AND Team.Pokemon_ID = Has_Type.Pokemon_ID
-    	) R1
-    WHERE
-    	Attacker = R1.Type
-    GROUP BY
-    	Defender;";
-
-    if($stmt = mysqli_prepare($link, $sql)) {
-      // Bind variables to the prepared statement as parameters
-      mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
-
-      // Set parameters
-      $param_user_ID = $user_ID;
-
-      // Attempt to execute the prepared statement
-      if(mysqli_stmt_execute($stmt)){
-        // Store result
-        mysqli_stmt_store_result($stmt);
-
-        // Check if username exists, if yes then verify password
-        if(mysqli_stmt_num_rows($stmt) >= 1){
-          // Create table
-          mysqli_stmt_bind_result($stmt, $col1, $col2);
-
-          print "<table class='w3-table w3-bordered'>";
-          print "<tr align = 'center' class='w3-blue'>";
-          print "<th style='text-align:center;'>Type</th>";
-          print "<th style='text-align:center;'>Effectiveness</th>";
-          print "</tr>";
-          while (mysqli_stmt_fetch($stmt)) {
-            print "<tr align = 'center'>";
-            print "<td>" . $col1 . "</td> ";
-            print "<td>" . $col2 . "</td> ";
-            print "</tr>";
-          }
-          print "</table>";
-        } else{
-          // Display an error message if username doesn't exist
-          print "<div class='w3-container w3-red'><h3>No trainers willing to trade " . $search . ".</h3></div>";
-        }
-      } else{
-        echo "Oops! Something went wrong. Please try again later.";
-      }
-      // Close statement
-      mysqli_stmt_close($stmt);
-      // Close connection
-      mysqli_close($link);
-    }
-    ?>
-  </div>
 
   <br>
   <div class="w3-card-4 w3-white" style='margin:auto; width:700px;' id="bars">
     <div class="row">
-      <div class="side">
-        <div>5 star</div>
-      </div>
-      <div class="middle">
-        <div class="bar-container">
-          <div class="bar-5"></div>
-        </div>
-      </div>
-      <div class="side right">
-        <div>150</div>
-      </div>
-      <div class="side">
-        <div>4 star</div>
-      </div>
-      <div class="middle">
-        <div class="bar-container">
-          <div class="bar-4"></div>
-        </div>
-      </div>
-      <div class="side right">
-        <div>63</div>
-      </div>
-      <div class="side">
-        <div>3 star</div>
-      </div>
-      <div class="middle">
-        <div class="bar-container">
-          <div class="bar-3"></div>
-        </div>
-      </div>
-      <div class="side right">
-        <div>15</div>
-      </div>
-      <div class="side">
-        <div>2 star</div>
-      </div>
-      <div class="middle">
-        <div class="bar-container">
-          <div class="bar-2"></div>
-        </div>
-      </div>
-      <div class="side right">
-        <div>6</div>
-      </div>
-      <div class="side">
-        <div>1 star</div>
-      </div>
-      <div class="middle">
-        <div class="bar-container">
-          <div class="bar-1"></div>
-        </div>
-      </div>
-      <div class="side right">
-        <div>20</div>
-      </div>
+      <?php
+
+      // Prepare a select statement
+      $sql =
+      "SELECT
+      	Defender, SUM(Multiplier) AS Result
+      FROM
+      	Effectiveness,
+          (
+      		SELECT
+      			Has_Type.Type
+      		FROM
+      			Team, Has_Type
+      		WHERE
+      			Trainer_ID = ? AND Team.Pokemon_ID = Has_Type.Pokemon_ID
+      	) R1
+      WHERE
+      	Attacker = R1.Type
+      GROUP BY
+      	Defender;";
+
+      if($stmt = mysqli_prepare($link, $sql)) {
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
+
+        // Set parameters
+        $param_user_ID = $user_ID;
+
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+          // Store result
+          mysqli_stmt_store_result($stmt);
+
+          // Check if username exists, if yes then verify password
+          if(mysqli_stmt_num_rows($stmt) >= 1){
+            // Create table
+            mysqli_stmt_bind_result($stmt, $col1, $col2);
+
+            while (mysqli_stmt_fetch($stmt)) {
+              print
+              "<div class='side'>
+                <div>" . $col1 . "</div>
+              </div>
+              <div class='middle'>
+                <div class='bar-container'>
+                  <div class='bar-4' style='width: " . ($col2 / 0.24) . "%'></div>
+                </div>
+              </div>
+              <div class='side right'>
+                <div>" . $col2 . "</div>
+              </div>";
+            }
+            print "</table>";
+          } else{
+            // Display an error message if username doesn't exist
+            print "<div class='w3-container w3-red'><h3>No trainers willing to trade " . $search . ".</h3></div>";
+          }
+        } else{
+          echo "Oops! Something went wrong. Please try again later.";
+        }
+        // Close statement
+        mysqli_stmt_close($stmt);
+        // Close connection
+        mysqli_close($link);
+      }
+      ?>
     </div>
   </div>
 
