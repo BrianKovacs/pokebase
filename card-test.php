@@ -189,12 +189,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   </td>
                 </tr>
                 <tr>
-                  <td>Willing to trade:<form action='toggle-trade.php' method='post'> <input type='hidden' value='" . $col2 . "' name='trade' /> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-xlarge w3-circle w3-white' value='Submit'><i class='";
-                  echo ($col2 == '1') ? 'fa fa-check-square-o' : 'fa fa-square-o';
-                  print "' style='font-size:24px'></i></button></form> </td>
-                </tr>
-              </table>
-            </div>";
+                <td><form action='toggle-trade.php' method='post'>Willing to trade: <input type='hidden' value='" . $col2 . "' name='trade' /> <input type='hidden' value='" . $col3 . "' name='upid' /> <button type='submit' class='w3-button w3-circle w3-white' value='Submit' style='width:30px; height:30px; padding:0;'><i class='";
+                echo ($col2 == '1') ? 'fa fa-check-square-o' : 'fa fa-square-o';
+                print "' style='font-size:22px;margin:4px;'></i></button></form> </td>
+              </tr>
+            </table>
+          </div>";
           }
         } else{
           echo "Oops! Something went wrong. Please try again later.";
