@@ -31,17 +31,17 @@ $user_ID = trim($_SESSION["user_ID"]);
 
   .fade-in {
     width:0%;  /* make things invisible upon start */
-    -webkit-animation:fadeIn ease 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
-    -moz-animation:fadeIn ease 1;
-    animation:fadeIn ease 1;
+    -webkit-animation:fadeIn ease-out 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+    -moz-animation:fadeIn ease-out 1;
+    animation:fadeIn ease-out 1;
 
     -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
     -moz-animation-fill-mode:forwards;
     animation-fill-mode:forwards;
 
-    -webkit-animation-duration:1s;
-    -moz-animation-duration:1s;
-    animation-duration:1s;
+    -webkit-animation-duration:0.5s;
+    -moz-animation-duration:0.5s;
+    animation-duration:0.5s;
   }
 
   .fade-in.delay1 {
@@ -205,26 +205,27 @@ $user_ID = trim($_SESSION["user_ID"]);
 
       // Prepare a select statement
       $sql =
-      "SELECT
-      	Defender, SUM(Multiplier) AS Result
-      FROM
-      	Effectiveness,
-          (
-      		SELECT
-      			Has_Type.Type
+      "SELECT Defender, SUM(M) as Result FROM
+      	(SELECT
+      		UPID, Name, Defender, ROUND(EXP(SUM(LOG(Multiplier))),1) AS M
+      	FROM
+      		Effectiveness,
+      		(SELECT
+      			UPID, Name, Has_Type.Type
       		FROM
-      			Team, Has_Type
+      			Team, Has_Type, Pokemon
       		WHERE
-      			Trainer_ID = ? AND Team.Pokemon_ID = Has_Type.Pokemon_ID
-      	) R1
-      WHERE
-      	Attacker = R1.Type
-      GROUP BY
-      	Defender;";
+      			Trainer_ID = ? AND Team.Pokemon_ID = Has_Type.Pokemon_ID AND Team.Pokemon_ID = Pokemon.ID
+      		) R1
+      	WHERE
+      		R1.Type = Effectiveness.Attacker
+      	GROUP BY
+      		UPID, Name, Defender) R2
+      GROUP BY Defender;";
 
       if($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "s", $param_user_ID);
+        mysqli_stmt_bind_param($stmt, "i", $param_user_ID);
 
         // Set parameters
         $param_user_ID = $user_ID;
@@ -241,6 +242,8 @@ $user_ID = trim($_SESSION["user_ID"]);
             $count = 1;
 
             while (mysqli_stmt_fetch($stmt)) {
+              if (is_null($col2))
+                $col2 = 0;
               print
               "<div class='side'>
                 <div>" . $col1 . "</div>

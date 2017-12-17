@@ -45,8 +45,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
           // Bind result variables
           mysqli_stmt_bind_result($stmt, $username, $hashed_password, $ID);
           if(mysqli_stmt_fetch($stmt)){
-            if($password == $hashed_password){
-              // if(password_verify($password, $hashed_password)){
+            // if($password == $hashed_password){
+            if(password_verify($password, $hashed_password)){
               /* Password is correct, so start a new session and
               save the username to the session */
               session_start();
@@ -105,7 +105,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
       <form class="w3-container w3-light-grey" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <p>
-          <label>Userame</label>
+          <label>Username</label>
           <input class="w3-input" type="text" name="username" value="<?php echo $username; ?>">
           <span class="help-block"><?php echo $username_err; ?></span>
         </p>
