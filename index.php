@@ -69,7 +69,27 @@ if($stmt = mysqli_prepare($link, $sql)){
 
   <h1 style="text-align:center">Hi, <b><?php echo $username; ?></b>.<br> Welcome to Pokébase.</h1>
   <hr>
-  <p style="text-align:center;"><a href="logout.php" class="w3-button w3-red">Sign Out of Your Account</a></p>
+  <p style="text-align:center;"><a href="logout.php" class="w3-button w3-blue" style="width:225px;">Sign Out</a></p>
+  <p style="text-align:center;"><button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-red" style="width:225px;">Delete Account</button></p>
+
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4" style="width:500px;">
+      <header class="w3-container w3-red">
+        <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-topright">&times;</span>
+        <h2>Delete Account</h2>
+      </header>
+      <div class="w3-container w3-white">
+        <h4><b><?php echo $username; ?></b>, you are about to permanetly delete your account. Are you sure you want to continue? If so, click the button below to delete your account. This action cannot be undone.</h4>
+        <form action="delete.php" method="post">
+          <p style="text-align:center;"><input type="submit" name="delete" value="Permanently Delete My Account" class="w3-button w3-red"></p>
+        </form>
+      </div>
+      <footer class="w3-container w3-red">
+        <p>Warning: <em>This will also delete all the Pokémon on your team!</em></p>
+      </footer>
+    </div>
+  </div>
 
 </body>
 </html>

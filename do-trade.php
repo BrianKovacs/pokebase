@@ -84,15 +84,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty(trim($_POST["first"])) && !emp
   if ($query_success) {
     echo 'Success';
     mysqli_commit($link);
+    header("location: add.php");
+    exit;
   } else {
-    echo 'Error';
+    echo 'Error: Please try again later.';
     mysqli_rollback($link);
   }
 
 } else {
   echo 'Error: Unknown';
-  // header("location: trade.php");
-  // exit;
+  header("location: trade.php");
+  exit;
 }
 
 ?>
