@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_ID']) || empty($_SESSION['user_ID'])) {
 $search = "";
 $search_err = "";
 $do_search = false;
+$user_ID = trim($_SESSION["user_ID"]);
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -66,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <title></title>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body class="w3-dark-grey" style="padding-top:50px;">
 
@@ -85,60 +87,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <hr>
 
   <div class="w3-card-4 w3-white" style='margin:auto; width:700px;'>
-    <?php
+    <div class='w3-table w3-bordered'>
+      <div class='w3-container w3-blue'>
+        <h2>Trade Pokémon</h2>
+      </div>
 
-    if ($do_search) {
-      // Prepare a select statement
-      $sql = "SELECT Name FROM Trainer WHERE ID IN(SELECT Trainer_ID FROM Pokemon, Team WHERE Pokemon.Name=? AND Pokemon.ID = Pokemon_ID AND Will_Trade='1');";
+      <div >
+        <form class="w3-container w3-light-grey" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+          <p>
+            <label>Search for:</label>
+            <input class="w3-input" type="text" name="search" value="<?php echo $search; ?>">
+            <span class="help-block"><?php echo $search_err; ?></span>
+          </p>
+        </form>
+      </div>
 
-      if($stmt = mysqli_prepare($link, $sql)) {
-        // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "s", $param_search);
+      <?php
 
-        // Set parameters
-        $param_search = $search;
+      if ($do_search) {
+        // Prepare a select statement
+        $sql = "SELECT Name FROM Trainer WHERE ID IN(SELECT Trainer_ID FROM Pokemon, Team WHERE Pokemon.Name=? AND Pokemon.ID = Pokemon_ID AND Will_Trade='1');";
 
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-          // Store result
-          mysqli_stmt_store_result($stmt);
+        if($stmt = mysqli_prepare($link, $sql)) {
+          // Bind variables to the prepared statement as parameters
+          mysqli_stmt_bind_param($stmt, "s", $param_search);
 
-          // Check if username exists, if yes then verify password
-          if(mysqli_stmt_num_rows($stmt) >= 1){
-            // Create table
-            mysqli_stmt_bind_result($stmt, $col1);
+          // Set parameters
+          $param_search = $search;
 
-            print "<table class='w3-table w3-bordered'>";
-            print "<tr align = 'center' class='w3-blue'>";
-            print "<th style='text-align:center;'>Willing to Trade " . $search . "</th>";
-            print "</tr>";
-            while (mysqli_stmt_fetch($stmt)) {
-              print "<tr align = 'center'>";
-              print "<td>" . $col1 . "</td> ";
-              print "</tr>";
+          // Attempt to execute the prepared statement
+          if(mysqli_stmt_execute($stmt)){
+            // Store result
+            mysqli_stmt_store_result($stmt);
+
+            // Check if username exists, if yes then verify password
+            if(mysqli_stmt_num_rows($stmt) >= 1){
+              // Create table
+              mysqli_stmt_bind_result($stmt, $col1);
+              print "<form class='w3-container w3-light-grey'>";
+              print "<div style='float:left; width:50%;'>";
+              print "<p>Willing to trade " . $search . ":<br>";
+              while (mysqli_stmt_fetch($stmt)) {
+                print "&nbsp;&nbsp;<label><input type='radio' name='trainer_choice' onclick='if ($(\"input[name=trade_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col1 . "'</input> " . $col1 . "<br></label>";
+              }
+              print "</p></div>";
+              print "<div style='float:left; width:50%;'>";
+              print "<p>In exchange for:<br>";
+
+              $sql = "SELECT Name, ID FROM Pokemon, Team WHERE ID = Pokemon_ID AND Trainer_ID = ? AND Will_Trade = True;";
+              if($stmt = mysqli_prepare($link, $sql)) {
+                // Bind variables to the prepared statement as parameters
+                mysqli_stmt_bind_param($stmt, "i", $param_user_ID);
+                // Set parameters
+                $param_user_ID = $user_ID;
+                // Attempt to execute the prepared statement
+                if(mysqli_stmt_execute($stmt)){
+                  // Store result
+                  mysqli_stmt_store_result($stmt);
+                  if(mysqli_stmt_num_rows($stmt) >= 1){
+                    mysqli_stmt_bind_result($stmt, $col1, $col2);
+                    while (mysqli_stmt_fetch($stmt)) {
+                      print "&nbsp;&nbsp;<label><input type='radio' name='trade_choice' onclick='if ($(\"input[name=trainer_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
+                    }
+                  }
+                  else {
+                    print "<em>&nbsp;&nbsp;You don't have any tradable Pokémon!</em>";
+                  }
+                }
+              }
+
+              print "</p></div>";
+              print "<p><input type='submit' id='doTrade' class='w3-input w3-button w3-blue' disabled='disabled' value='Initiate Trade'></p>";
+              print "</form>";
+            } else{
+              // Display an error message if username doesn't exist
+              print "<div class='w3-container w3-red'><h3>No trainers willing to trade " . $search . ".</h3></div>";
             }
-            print "</table>";
           } else{
-            // Display an error message if username doesn't exist
-            print "<div class='w3-container w3-red'><h3>No trainers willing to trade " . $search . ".</h3></div>";
+            echo "Oops! Something went wrong. Please try again later.";
           }
-        } else{
-          echo "Oops! Something went wrong. Please try again later.";
+          // Close statement
+          mysqli_stmt_close($stmt);
         }
-        // Close statement
-        mysqli_stmt_close($stmt);
       }
-    }
-    ?>
-
-    <div class="w3-card-4">
-      <form class="w3-container w3-light-grey" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <p>
-          <label>Search for:</label>
-          <input class="w3-input" type="text" name="search" value="<?php echo $search; ?>">
-          <span class="help-block"><?php echo $search_err; ?></span>
-        </p>
-      </form>
+      ?>
     </div>
 
   </div>
