@@ -124,11 +124,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if(mysqli_stmt_num_rows($stmt) >= 1){
               // Create table
               mysqli_stmt_bind_result($stmt, $col1, $col2);
-              print "<form class='w3-container w3-light-grey'>";
+              print "<form class='w3-container w3-light-grey' action='do-trade.php' method='post'>";
               print "<div style='float:left; width:50%;'>";
               print "<p>Willing to trade " . $search . ":<br>";
               while (mysqli_stmt_fetch($stmt)) {
-                print "&nbsp;&nbsp;<label><input type='radio' name='trainer_choice' onclick='if ($(\"input[name=trade_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
+                print "&nbsp;&nbsp;<label><input type='radio' name='first' onclick='if ($(\"input[name=second]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
               }
               print "</p></div>";
               print "<div style='float:left; width:50%;'>";
@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   if(mysqli_stmt_num_rows($stmt) >= 1){
                     mysqli_stmt_bind_result($stmt, $col1, $col2);
                     while (mysqli_stmt_fetch($stmt)) {
-                      print "&nbsp;&nbsp;<label><input type='radio' name='trade_choice' onclick='if ($(\"input[name=trainer_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
+                      print "&nbsp;&nbsp;<label><input type='radio' name='second' onclick='if ($(\"input[name=first]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
                     }
                   }
                   else {

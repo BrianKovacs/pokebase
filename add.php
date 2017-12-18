@@ -188,7 +188,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                       <span class='w3-round-xxlarge w3-yellow' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Defense <b>" . $defense . "</b></span>
                       <span class='w3-round-xxlarge w3-blue' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Attack <b>" . $sp_attack . "</b></span>
                       <span class='w3-round-xxlarge w3-green' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Sp Defense <b>" . $sp_defense . "</b></span>
-                      <span class='w3-round-xxlarge w3-pink' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Speed <b>" . $speed . "</b></span>
+                      <span class='w3-round-xxlarge w3-purple' style='padding:4px 8px; display:inline-block; margin: 2px 0'>Speed <b>" . $speed . "</b></span>
                     </span>
                   </td>
                 </tr>
