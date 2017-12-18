@@ -24,6 +24,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     echo 'Error: Please try again later.';
   }
   mysqli_stmt_close($stmt);
+  // Unset all of the session variables
+  $_SESSION = array();
+  // Destroy the session.
+  session_destroy();
+  // Redirect to login page
   header("location: login.php");
   exit;
 
