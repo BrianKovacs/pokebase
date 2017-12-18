@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       if ($do_search) {
         // Prepare a select statement
-        $sql = "SELECT Name FROM Trainer WHERE ID IN(SELECT Trainer_ID FROM Pokemon, Team WHERE Pokemon.Name=? AND Pokemon.ID = Pokemon_ID AND Will_Trade='1');";
+        $sql = "SELECT Trainer.Name, UPID FROM Trainer, Pokemon, Team WHERE Pokemon.Name=? AND Pokemon.ID = Pokemon_ID AND Trainer.ID = Trainer_ID AND Will_Trade='1';";
 
         if($stmt = mysqli_prepare($link, $sql)) {
           // Bind variables to the prepared statement as parameters
@@ -123,18 +123,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check if username exists, if yes then verify password
             if(mysqli_stmt_num_rows($stmt) >= 1){
               // Create table
-              mysqli_stmt_bind_result($stmt, $col1);
+              mysqli_stmt_bind_result($stmt, $col1, $col2);
               print "<form class='w3-container w3-light-grey'>";
               print "<div style='float:left; width:50%;'>";
               print "<p>Willing to trade " . $search . ":<br>";
               while (mysqli_stmt_fetch($stmt)) {
-                print "&nbsp;&nbsp;<label><input type='radio' name='trainer_choice' onclick='if ($(\"input[name=trade_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col1 . "'</input> " . $col1 . "<br></label>";
+                print "&nbsp;&nbsp;<label><input type='radio' name='trainer_choice' onclick='if ($(\"input[name=trade_choice]:checked\").length > 0) { document.getElementById(\"doTrade\").disabled = false; };' value='" . $col2 . "'</input> " . $col1 . "<br></label>";
               }
               print "</p></div>";
               print "<div style='float:left; width:50%;'>";
               print "<p>In exchange for:<br>";
 
-              $sql = "SELECT Name, ID FROM Pokemon, Team WHERE ID = Pokemon_ID AND Trainer_ID = ? AND Will_Trade = True;";
+              $sql = "SELECT Name, UPID FROM Pokemon, Team WHERE ID = Pokemon_ID AND Trainer_ID = ? AND Will_Trade = True;";
               if($stmt = mysqli_prepare($link, $sql)) {
                 // Bind variables to the prepared statement as parameters
                 mysqli_stmt_bind_param($stmt, "i", $param_user_ID);
